@@ -3,6 +3,7 @@ package ru.romanov.schedule.utils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,6 +17,13 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.json.JSONArray;
 import org.w3c.dom.Document;
@@ -94,11 +102,65 @@ public abstract class XMLParser {
 		} catch (SAXException e) {
 			throw e;
 		} finally {
-			if (str_stream != null)
-				str_stream.close();
+			str_stream.close();
 		}
 		return dom;
 	}
+	
+	public static void parseSubTree(NodeList subTree, HashMap<String, String> resultMap) {
+		for (int i = 0; i < subTree.getLength(); i++) {
+			Node currentNode = subTree.item(i);
+			String name = currentNode.getNodeName();
+			String value = currentNode.getNodeValue();
+			resultMap.put(name, value);
+			NodeList st = currentNode.getChildNodes();
+			if (st.getLength() != 0){
+				parseSubTree(st, resultMap);
+			}
+		}
+	}
+	
+	public static Map<String, String> parseResponse(String XMLResponse) throws ParserConfigurationException, SAXException, IOException {
+		HashMap<String, String> resultMap = new HashMap<String, String>();
+		InputStream is = null;
+		try {
+			is = new ByteArrayInputStream(XMLResponse.getBytes("UTF-8"));
+			DocumentBuilder builder = getBuilder();
+			Document dom = builder.parse(is);
+			Node root = dom.getDocumentElement();
+			NodeList responceNodes = root.getChildNodes();
+			
+			parseSubTree(responceNodes, resultMap);
+		} finally {
+			is.close();
+		}
+		return resultMap;
+	}
+	
+	public static String documentToString(Document doc) {
+		StringWriter sw = new StringWriter();
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer;
+		try {
+			transformer = tf.newTransformer();
+		
+	        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+	        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+	        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+	        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+	
+			transformer.transform(new DOMSource(doc), new StreamResult(sw));
+			   
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return sw.toString();
+	}
+
 	
 	public static Map<String, String> parseAuthResponse(String XMLResponse)
 			throws ParserConfigurationException, SAXException, IOException {

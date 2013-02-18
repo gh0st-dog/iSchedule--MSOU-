@@ -2,6 +2,11 @@ package ru.romanov.schedule.utils;
 
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 public abstract class RequestStringsCreater {
 	
 	public static String CHECK_AGREE = "agree";
@@ -20,39 +25,61 @@ public abstract class RequestStringsCreater {
 	 * @param login
 	 * @param pass
 	 * @return
+	 * @throws ParserConfigurationException 
 	 */
-	public static String createAuthRequestSting(String login, String pass) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<request version=").append(REQUEST_VERSION).append(" type=").append(REQUEST_TYPE_AUTH).append(">");
-		sb.append("<login>").append(login).append("</login>");
-		sb.append("<pass>").append(pass).append("</pass>");
-		sb.append("</request>");
-		return sb.toString();
+	public static String createAuthRequestSting(String login, String pass) throws ParserConfigurationException {
+		Document doc = XMLParser.createDocument();
+		
+        Element rootNode = doc.createElement("request");
+        rootNode.setAttribute("version", REQUEST_VERSION);
+        rootNode.setAttribute("type", REQUEST_TYPE_AUTH);
+        doc.appendChild(rootNode);
+        
+        Element loginNode = doc.createElement("login");
+        loginNode.setTextContent(login);
+        Element passNode = doc.createElement("pass");
+        passNode.setTextContent(pass);
+        rootNode.appendChild(loginNode);
+        rootNode.appendChild(passNode);
+        
+        return XMLParser.documentToString(doc);
 	}
 	/**
 	 * Создать строку - тело запроса на загрузку изменений
 	 * @param token
 	 * @return
+	 * @throws ParserConfigurationException 
 	 */
-	public static String createUpdateString (String token) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<request version=").append(REQUEST_VERSION).append(" type=").append(REQUEST_TYPE_UPDATE).append(">");
-		sb.append("<token>").append(token).append("</token>");
-		sb.append("</request>");
-		return sb.toString();
+	public static String createUpdateString (String token) throws ParserConfigurationException {
+		Document doc = XMLParser.createDocument();
+		Element rootNode = doc.createElement("request");
+		rootNode.setAttribute("version", REQUEST_VERSION);
+        rootNode.setAttribute("type", REQUEST_TYPE_UPDATE);
+        doc.appendChild(rootNode);
+        Element tokenNode = doc.createElement("token");
+        tokenNode.setTextContent(token);
+        rootNode.appendChild(tokenNode);
+		return XMLParser.documentToString(doc);
+
 	}
 	
 	/**
 	 * Создать строку - тело запроса проверки наличия обновлений
 	 * @param token
 	 * @return
+	 * @throws ParserConfigurationException 
 	 */
-	public static String createCheckUpdateString (String token) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<request version=").append(REQUEST_VERSION).append(" type=").append(REQUEST_TYPE_CHECK_UPDATES).append(">");
-		sb.append("<token>").append(token).append("</token>");
-		sb.append("</request>");
-		return sb.toString();
+	public static String createCheckUpdateString (String token) throws ParserConfigurationException {
+		Document doc = XMLParser.createDocument();
+		Element rootNode = doc.createElement("request");
+        rootNode.setAttribute("version", REQUEST_VERSION);
+        rootNode.setAttribute("type", REQUEST_TYPE_CHECK_UPDATES);
+        doc.appendChild(rootNode);
+        Element tokenNode = doc.createElement("token");
+        tokenNode.setTextContent(token);
+        rootNode.appendChild(tokenNode);
+		return XMLParser.documentToString(doc);
+
 	}
 	
 	/**
@@ -60,19 +87,25 @@ public abstract class RequestStringsCreater {
 	 * @param token
 	 * @param idMap - карта, формата <ID, CHECK_STATUS(CHECK_AGREE, CHECK_DISAGREE)>
 	 * @return
+	 * @throws ParserConfigurationException 
 	 */
-	public static String createConfirmCheckString (String token, Map <String, String> idMap) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<request version=").append(REQUEST_VERSION).append(" type=").append(REQUEST_TYPE_CONFIRM_CHECK).append(">");
-		sb.append("<token>").append(token).append("</token>");
-		for (String mID : idMap.keySet()) {
-			sb.append("<id checked='").append(idMap.get(mID)).append("'>");
-			sb.append(mID).append("</id>");	
-		}
-		sb.append("</request>");
-		return sb.toString();
+	public static String createConfirmCheckString (String token, Map <String, String> idMap) throws ParserConfigurationException {
+		Document doc = XMLParser.createDocument();
+		Element rootNode = doc.createElement("request");
+        rootNode.setAttribute("version", REQUEST_VERSION);
+        rootNode.setAttribute("type", REQUEST_TYPE_CONFIRM_CHECK);
+        doc.appendChild(rootNode);
+        Element tokenNode = doc.createElement("token");
+        tokenNode.setTextContent(token);
+        rootNode.appendChild(tokenNode);
+        
+        for (String mID: idMap.keySet()) {
+        	Element id = doc.createElement("id");
+        	id.setAttribute("checked", idMap.get(mID));
+        	rootNode.appendChild(id);
+        }
+		return XMLParser.documentToString(doc);
+
 	}
 	
-	
-
 }
