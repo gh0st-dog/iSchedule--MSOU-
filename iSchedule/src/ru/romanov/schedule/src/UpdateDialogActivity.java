@@ -9,6 +9,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -109,8 +111,14 @@ public class UpdateDialogActivity extends Activity implements OnClickListener {
 		@Override
 		protected Map<String, String> doInBackground(Void... params) {
 			HttpClient client = new DefaultHttpClient();
-			String reqString = RequestStringsCreater
-					.createCheckUpdateString(token);
+			String reqString = null;
+			try {
+				reqString = RequestStringsCreater
+						.createCheckUpdateString(token);
+			} catch (ParserConfigurationException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			HttpResponse responce = null;
 			try {
 				HttpPost request = new HttpPost(StringConstants.MY_URI);
@@ -188,7 +196,13 @@ public class UpdateDialogActivity extends Activity implements OnClickListener {
 		@Override
 		protected MySubjectUpdateManager doInBackground(Void... params) {
 			HttpClient client = new DefaultHttpClient();
-			String reqString = RequestStringsCreater.createUpdateString(token);
+			String reqString = null;
+			try {
+				reqString = RequestStringsCreater.createUpdateString(token);
+			} catch (ParserConfigurationException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			HttpResponse response = null;
 			try {
 				HttpPost request = new HttpPost(StringConstants.MY_URI);

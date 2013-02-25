@@ -1,5 +1,6 @@
 package ru.romanov.schedule.utils;
 
+import android.annotation.SuppressLint;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -13,11 +14,11 @@ public abstract class RequestStringsCreater {
 	public static String CHECK_DISAGREE = "disagree";
 	
 	
-	private static String REQUEST_VERSION = "'0.1'";
-	private static String REQUEST_TYPE_AUTH = "'auth'";
-	private static String REQUEST_TYPE_UPDATE = "'update'";
-	private static String REQUEST_TYPE_CHECK_UPDATES = "'last_update_info'";
-	private static String REQUEST_TYPE_CONFIRM_CHECK = "'check'";
+	private static String REQUEST_VERSION = "0.1";
+	private static String REQUEST_TYPE_AUTH = "auth";
+	private static String REQUEST_TYPE_UPDATE = "update";
+	private static String REQUEST_TYPE_CHECK_UPDATES = "last_update_info";
+	private static String REQUEST_TYPE_CONFIRM_CHECK = "check";
 	
 	//public static String MY_URI = "http://172.16.0.2:19090/main";
 	/**

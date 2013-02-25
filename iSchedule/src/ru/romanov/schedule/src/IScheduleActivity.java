@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -81,7 +83,7 @@ public class IScheduleActivity extends Activity {
 				PostRequestAuthManager pram = new PostRequestAuthManager(
 						loginEditText.getText().toString(), passEditText
 								.getText().toString());
-				pram.execute(null);
+				pram.execute();
 
 			}
 		});
@@ -124,8 +126,14 @@ public class IScheduleActivity extends Activity {
 		@Override
 		protected HttpResponse doInBackground(Void... params) {
 			HttpClient client = new DefaultHttpClient();
-			String reqString = RequestStringsCreater.createAuthRequestSting(
-					login, pass);
+			String reqString = null;
+			try {
+				reqString = RequestStringsCreater.createAuthRequestSting(
+						login, pass);
+			} catch (ParserConfigurationException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			HttpResponse responce = null;
 			try {
 				HttpPost request = new HttpPost(StringConstants.MY_URI);
@@ -160,7 +168,7 @@ public class IScheduleActivity extends Activity {
 					while ((line = r.readLine()) != null) {
 						total.append(line);
 					}
-					Map<String, String> resultMap = XMLParser.parseAuthResponse(total.toString());
+					Map<String, String> resultMap = XMLParser.parseResponse(total.toString());
 					if(resultMap.get(XMLParser.STATUS).equals(XMLParser.OK)) {
 						Toast.makeText(IScheduleActivity.this,
 								getString(R.string.auth_success), Toast.LENGTH_LONG).show();

@@ -24,6 +24,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.json.JSONArray;
 import org.w3c.dom.Document;
@@ -71,7 +76,7 @@ public abstract class XMLParser {
 	public static String MY_LONG_DATE_FORMAT = "dd.MM.dd  kk:mm";
 
 	/**
-	 * разбор ответа на запрос авторизации
+	 * —А–∞–Ј–±–Њ—А –Њ—В–≤–µ—В–∞ –љ–∞ –Ј–∞–њ—А–Њ—Б –∞–≤—В–Њ—А–Є–Ј–∞—Ж–Є–Є
 	 * 
 	 * @param XMLResponse
 	 * @return
@@ -88,6 +93,19 @@ public abstract class XMLParser {
 		DocumentBuilderFactory factory = DocumentBuilderFactory
 				.newInstance();
 		return factory.newDocumentBuilder();
+	}
+	
+	public static XPathExpression getXPathExpression(String str) {
+		XPathExpression expr = null;
+		XPathFactory factory = XPathFactory.newInstance();
+	    XPath xpath = factory.newXPath();
+	    try {
+			expr = xpath.compile(str);
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return expr;
 	}
 	
 	public static Document domFromString(String XMLString) throws ParserConfigurationException, SAXException, IOException {
@@ -107,34 +125,25 @@ public abstract class XMLParser {
 		return dom;
 	}
 	
-	public static void parseSubTree(NodeList subTree, HashMap<String, String> resultMap) {
-		for (int i = 0; i < subTree.getLength(); i++) {
-			Node currentNode = subTree.item(i);
-			String name = currentNode.getNodeName();
-			String value = currentNode.getNodeValue();
-			resultMap.put(name, value);
-			NodeList st = currentNode.getChildNodes();
-			if (st.getLength() != 0){
-				parseSubTree(st, resultMap);
-			}
-		}
+	public static void parseWithXPath(Document doc, String path, HashMap<String, String> resultMap, boolean depth) throws XPathExpressionException {
+		XPathExpression expr = getXPathExpression(path);
+		NodeList subTree = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+		parseSubTree(subTree, resultMap, depth);
 	}
 	
-	public static Map<String, String> parseResponse(String XMLResponse) throws ParserConfigurationException, SAXException, IOException {
-		HashMap<String, String> resultMap = new HashMap<String, String>();
-		InputStream is = null;
-		try {
-			is = new ByteArrayInputStream(XMLResponse.getBytes("UTF-8"));
-			DocumentBuilder builder = getBuilder();
-			Document dom = builder.parse(is);
-			Node root = dom.getDocumentElement();
-			NodeList responceNodes = root.getChildNodes();
-			
-			parseSubTree(responceNodes, resultMap);
-		} finally {
-			is.close();
+	public static void parseSubTree(NodeList subTree, HashMap<String, String> resultMap, boolean depth) {
+		for (int i = 0; i < subTree.getLength(); i++) {
+			Node currentNode = subTree.item(i);
+			if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
+				String name = currentNode.getNodeName();
+				String value = currentNode.getTextContent();
+				resultMap.put(name, value);
+				NodeList st = currentNode.getChildNodes();
+				if (st.getLength() != 0 && depth){
+					parseSubTree(st, resultMap, depth);
+				}
+			}
 		}
-		return resultMap;
 	}
 	
 	public static String documentToString(Document doc) {
@@ -160,8 +169,22 @@ public abstract class XMLParser {
 		}
 		return sw.toString();
 	}
-
 	
+	public static Map<String, String> parseResponse(String XMLResponse) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+		HashMap<String, String> resultMap = new HashMap<String, String>();
+		InputStream is = null;
+		try {
+			is = new ByteArrayInputStream(XMLResponse.getBytes("UTF-8"));
+			DocumentBuilder builder = getBuilder();
+			Document dom = builder.parse(is);
+			parseWithXPath(dom, "/response/*", resultMap, false);
+		} finally {
+			is.close();
+		}
+		return resultMap;
+	}
+	
+
 	public static Map<String, String> parseAuthResponse(String XMLResponse)
 			throws ParserConfigurationException, SAXException, IOException {
 		HashMap<String, String> resultMap = new HashMap<String, String>();
@@ -177,7 +200,7 @@ public abstract class XMLParser {
 					.getNodeValue();
 			resultMap.put(TOKEN, token);
 			
-			//Получим информацию о пользователе. Остальноe, пока, - не важно.
+			//–Я–Њ–ї—Г—З–Є–Љ –Є–љ—Д–Њ—А–Љ–∞—Ж–Є—О –Њ –њ–Њ–ї—М–Ј–Њ–≤–∞—В–µ–ї–µ. –Ю—Б—В–∞–ї—М–љ–Њe, –њ–Њ–Ї–∞, - –љ–µ –≤–∞–∂–љ–Њ.
 			NodeList userInfoList = responceNodes.item(2).getChildNodes().item(1).getChildNodes();
 			resultMap.put(NAME, userInfoList.item(1).getFirstChild().getNodeValue());
 			resultMap.put(EMAIL, userInfoList.item(3).getFirstChild().getNodeValue());
@@ -187,7 +210,7 @@ public abstract class XMLParser {
 	}
 
 	/**
-	 * разбор ответа на запрос информации о последнем обновлении
+	 * —А–∞–Ј–±–Њ—А –Њ—В–≤–µ—В–∞ –љ–∞ –Ј–∞–њ—А–Њ—Б –Є–љ—Д–Њ—А–Љ–∞—Ж–Є–Є –Њ –њ–Њ—Б–ї–µ–і–љ–µ–Љ –Њ–±–љ–Њ–≤–ї–µ–љ–Є–Є
 	 * 
 	 * @param XMLResponse
 	 * @return
@@ -229,7 +252,7 @@ public abstract class XMLParser {
 	}
 
 	/**
-	 * разбор ответа на запрос обновления
+	 * —А–∞–Ј–±–Њ—А –Њ—В–≤–µ—В–∞ –љ–∞ –Ј–∞–њ—А–Њ—Б –Њ–±–љ–Њ–≤–ї–µ–љ–Є—П
 	 * 
 	 * @param XMLResponse
 	 * @return
@@ -255,7 +278,7 @@ public abstract class XMLParser {
 					manager.setStatus(MySubjectUpdateManager.OK);
 				}
 			} else {
-				// Ошибка! Статус != ОК
+				// –Ю—И–Є–±–Ї–∞! –°—В–∞—В—Г—Б != –Ю–Ъ
 				manager = new MySubjectUpdateManager();
 				manager.setStatus(MySubjectUpdateManager.FAIL);
 			}
@@ -272,7 +295,7 @@ public abstract class XMLParser {
 	}
 
 	/**
-	 * Служебный метод. Разбирает NodeList items из schedule
+	 * –°–ї—Г–∂–µ–±–љ—Л–є –Љ–µ—В–Њ–і. –†–∞–Ј–±–Є—А–∞–µ—В NodeList items –Є–Ј schedule
 	 * 
 	 * @param shedule
 	 * @throws ParseException
@@ -305,7 +328,7 @@ public abstract class XMLParser {
 				sbj.setActs(acts);
 				manager.addSubjectToAdd(sbj);
 			} else {
-				// TODO: Удаление элемента
+				// TODO: –£–і–∞–ї–µ–љ–Є–µ —Н–ї–µ–Љ–µ–љ—В–∞
 			}
 
 		}
@@ -314,7 +337,7 @@ public abstract class XMLParser {
 	}
 
 	/**
-	 * разобрать и установить дату в указанный MySubject
+	 * —А–∞–Ј–Њ–±—А–∞—В—М –Є —Г—Б—В–∞–љ–Њ–≤–Є—В—М –і–∞—В—Г –≤ —Г–Ї–∞–Ј–∞–љ–љ—Л–є MySubject
 	 * 
 	 * @param period
 	 * @param sbj
@@ -379,7 +402,7 @@ public abstract class XMLParser {
 	}
 
 	/**
-	 * Получить массив дат из периода с указанным днём недели
+	 * –Я–Њ–ї—Г—З–Є—В—М –Љ–∞—Б—Б–Є–≤ –і–∞—В –Є–Ј –њ–µ—А–Є–Њ–і–∞ —Б —Г–Ї–∞–Ј–∞–љ–љ—Л–Љ –і–љ—С–Љ –љ–µ–і–µ–ї–Є
 	 * 
 	 * @param startDate
 	 * @param endDate
@@ -405,7 +428,7 @@ public abstract class XMLParser {
 	}
 
 	/**
-	 * перевод из строкового значения дня недели в интовый
+	 * –њ–µ—А–µ–≤–Њ–і –Є–Ј —Б—В—А–Њ–Ї–Њ–≤–Њ–≥–Њ –Ј–љ–∞—З–µ–љ–Є—П –і–љ—П –љ–µ–і–µ–ї–Є –≤ –Є–љ—В–Њ–≤—Л–є
 	 * 
 	 * @param dow
 	 * @return

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.json.JSONObject;
 
 import ru.romanov.schedule.R;
@@ -76,7 +78,13 @@ public class UpdateListActivity extends ListActivity implements OnClickListener 
 		case R.id.check_confirm_button:
 			StringBuilder sb = new StringBuilder();
 			HashMap<String, String> idMap= this.adapter.getCheckedElemetsStatus();
-			String reqBody = RequestStringsCreater.createConfirmCheckString(token, idMap);
+			String reqBody = null;
+			try {
+				reqBody = RequestStringsCreater.createConfirmCheckString(token, idMap);
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			new AlertDialog.Builder(this).setMessage(reqBody).show();
 			break;
 		}
