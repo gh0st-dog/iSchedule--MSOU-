@@ -54,7 +54,7 @@
     <string name="exclude">Кроме:</string>
     <string name="enter">Вход</string>
     <string name="autorising">Авторизация</string>
-    <string name="login">Логин:</string>
-    <string name="password">Пароль:</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
 
 </resources>
