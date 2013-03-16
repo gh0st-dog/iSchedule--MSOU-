@@ -30,11 +30,12 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.json.JSONArray;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import ru.romanov.schedule.adapters.UserAdapter;
 
 public abstract class XMLParser {
 	private static long MILISEC_IN_DAY = 1000 * 60 * 60 * 24;
@@ -67,6 +68,7 @@ public abstract class XMLParser {
 	public static String NAME = "name";
 	public static String EMAIL ="email";
 	public static String PHONE = "phone";
+	public static String LOGIN = "login";
 	public static String LAST_UPDATE_DT = "last_update_dt";
 	public static String REPEAT_MODE_EACH = "each";
 	public static String REPEAT_MODE_NONE = "none";
@@ -170,44 +172,20 @@ public abstract class XMLParser {
 		return sw.toString();
 	}
 	
-	public static Map<String, String> parseResponse(String XMLResponse) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+	public static Map<String, String> parseResponse(String XMLResponse, String xPath) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
 		HashMap<String, String> resultMap = new HashMap<String, String>();
 		InputStream is = null;
 		try {
 			is = new ByteArrayInputStream(XMLResponse.getBytes("UTF-8"));
 			DocumentBuilder builder = getBuilder();
 			Document dom = builder.parse(is);
-			parseWithXPath(dom, "/response/*", resultMap, false);
+			parseWithXPath(dom, xPath, resultMap, false);
 		} finally {
 			is.close();
 		}
 		return resultMap;
 	}
 	
-
-	public static Map<String, String> parseAuthResponse(String XMLResponse)
-			throws ParserConfigurationException, SAXException, IOException {
-		HashMap<String, String> resultMap = new HashMap<String, String>();
-		Document dom =domFromString(XMLResponse);
-		NodeList domNodes = dom.getChildNodes();
-		Node response = domNodes.item(0);
-		NodeList responceNodes = response.getChildNodes();
-		String status = responceNodes.item(0).getFirstChild()
-				.getNodeValue();
-		resultMap.put(STATUS, status);
-		if(status.equals(OK)){
-			String token = responceNodes.item(1).getFirstChild()
-					.getNodeValue();
-			resultMap.put(TOKEN, token);
-			
-			//–Я–Њ–ї—Г—З–Є–Љ –Є–љ—Д–Њ—А–Љ–∞—Ж–Є—О –Њ –њ–Њ–ї—М–Ј–Њ–≤–∞—В–µ–ї–µ. –Ю—Б—В–∞–ї—М–љ–Њe, –њ–Њ–Ї–∞, - –љ–µ –≤–∞–∂–љ–Њ.
-			NodeList userInfoList = responceNodes.item(2).getChildNodes().item(1).getChildNodes();
-			resultMap.put(NAME, userInfoList.item(1).getFirstChild().getNodeValue());
-			resultMap.put(EMAIL, userInfoList.item(3).getFirstChild().getNodeValue());
-			resultMap.put(PHONE, userInfoList.item(4).getFirstChild().getNodeValue());
-		}
-		return resultMap;
-	}
 
 	/**
 	 * —А–∞–Ј–±–Њ—А –Њ—В–≤–µ—В–∞ –љ–∞ –Ј–∞–њ—А–Њ—Б –Є–љ—Д–Њ—А–Љ–∞—Ж–Є–Є –Њ –њ–Њ—Б–ї–µ–і–љ–µ–Љ –Њ–±–љ–Њ–≤–ї–µ–љ–Є–Є

@@ -11,7 +11,7 @@
     <string name="time">Время:</string>
     <string name="place">Аудитория:</string>
     <string name="group">Группа:</string>
-    <string name="my_info">Информация</string>
+    <string name="my_info">Профиль</string>
     <string name="check_updates">Изменения</string>
     <string name="download">Загрузить</string>
     <string name="settings">Настройки</string>
@@ -25,10 +25,10 @@
     <string name="apsent">НЕТ</string>
     <string name="dialog_yes">Да</string>
     <string name="dialog_no">Нет</string>
-    <string name="name">Имя:</string>
-    <string name="phone">Телефон:</string>
-    <string name="email">email:</string>
-    <string name="curr_profile_info">Информация о текущем профиле:</string>
+    <string name="name">Имя</string>
+    <string name="phone">Телефон</string>
+    <string name="email">Почта</string>
+    <string name="curr_profile_info">Информация о текущем профиле</string>
 
     <string-array name="days_of_week">
         <item>Воскресенье</item>

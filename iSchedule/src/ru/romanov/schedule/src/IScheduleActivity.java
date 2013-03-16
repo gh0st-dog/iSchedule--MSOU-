@@ -17,15 +17,13 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
+import ru.romanov.schedule.adapters.UserAdapter;
 import ru.romanov.schedule.utils.*;
 import ru.romanov.schedule.R;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -50,25 +48,12 @@ public class IScheduleActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		mSharedPreferences = getSharedPreferences(
 				StringConstants.SCHEDULE_SHARED_PREFERENCES, MODE_PRIVATE);
-		if (mSharedPreferences.getString(StringConstants.SHARED_LOGIN, null) == null
-				|| mSharedPreferences.getString(StringConstants.SHARED_PASS,
-						null) == null
-				|| mSharedPreferences.getString(StringConstants.TOKEN, null) == null) {
-			Editor editor = mSharedPreferences.edit();
-			editor.putString(StringConstants.SHARED_LOGIN, null);
-			editor.putString(StringConstants.SHARED_PASS, null);
-			editor.putString(StringConstants.TOKEN, null);
-			editor.commit();
+		
+		if (mSharedPreferences.getString(StringConstants.TOKEN, null) == null) {
 			setContentView(R.layout.main);
 		} else {
-			// NEXT ACTIVITY
-			//setContentView(R.layout.entering_layout);
-			Toast.makeText(this,
-					"Всё пучком! Следующая активити...", Toast.LENGTH_LONG).show();
 			startMainTabActivity();
 		}
-		//TODO: remove it
-
 	}
 
 	@Override
@@ -108,9 +93,6 @@ public class IScheduleActivity extends Activity {
 		private String login;
 		private String pass;
 		private String token;
-		private String name;
-		private String email;
-		private String phone;
 		private ProgressDialog dialog;
 		
 		public PostRequestAuthManager(String login, String pass) {
@@ -168,15 +150,18 @@ public class IScheduleActivity extends Activity {
 					while ((line = r.readLine()) != null) {
 						total.append(line);
 					}
-					Map<String, String> resultMap = XMLParser.parseResponse(total.toString());
+					Map<String, String> resultMap = XMLParser.parseResponse(total.toString(), "/response/*");
 					if(resultMap.get(XMLParser.STATUS).equals(XMLParser.OK)) {
 						Toast.makeText(IScheduleActivity.this,
 								getString(R.string.auth_success), Toast.LENGTH_LONG).show();
 						this.token = resultMap.get(XMLParser.TOKEN);
-						this.name = resultMap.get(XMLParser.NAME);
-						this.phone = resultMap.get(XMLParser.PHONE);
-						this.email = resultMap.get(XMLParser.EMAIL);
 						saveSessionData();
+						
+						resultMap = XMLParser.parseResponse(total.toString(), "/response/login-session/user/*");
+						Context context = getApplicationContext();
+						UserAdapter us = new UserAdapter(context);
+						us.saveUser(resultMap.get(XMLParser.NAME), resultMap.get(XMLParser.LOGIN), 
+								resultMap.get(XMLParser.EMAIL), resultMap.get(XMLParser.PHONE));
 						startMainTabActivity();
 						
 					} else {
@@ -191,22 +176,16 @@ public class IScheduleActivity extends Activity {
 					e.printStackTrace();
 				}
 			} else {
-				Toast.makeText(IScheduleActivity.this, "Не получилось соединиться с серверм.", Toast.LENGTH_LONG).show();
+				Toast.makeText(IScheduleActivity.this, "Не получилось соединиться с серверoм.", Toast.LENGTH_LONG).show();
 			}
 			dialog.dismiss();
 		}
 		
 		private void saveSessionData() {
 			Editor editor = IScheduleActivity.this.mSharedPreferences.edit();
-			editor.putString(StringConstants.SHARED_LOGIN, this.login);
-			editor.putString(StringConstants.SHARED_PASS, this.pass);
 			editor.putString(StringConstants.TOKEN, this.token);
-			editor.putString(StringConstants.SHARED_NAME, this.name);
-			editor.putString(StringConstants.SHARED_PHONE, this.phone);
-			editor.putString(StringConstants.SHARED_EMAIL, this.email);
 			editor.commit();
 		}
-		
 
 	}
 }
