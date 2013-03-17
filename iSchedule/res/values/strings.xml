@@ -20,7 +20,7 @@
     <string name="check">Проверка</string>
     <string name="new_changes">Изменения:</string>
     <string name="last_change">Последнее изменение:</string>
-    <string name="sure_to_exit">Вы уверены, что хотите выйти? Все данные будут удалены.</string>
+    <string name="sure_to_exit">Вы уверены, что хотите выйти из текущего профиля?</string>
     <string name="present">ЕСТЬ</string>
     <string name="apsent">НЕТ</string>
     <string name="dialog_yes">Да</string>

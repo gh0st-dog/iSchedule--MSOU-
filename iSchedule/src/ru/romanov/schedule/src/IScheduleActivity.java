@@ -22,6 +22,7 @@ import ru.romanov.schedule.adapters.UserAdapter;
 import ru.romanov.schedule.utils.*;
 import ru.romanov.schedule.R;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +31,9 @@ import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract.RawContacts.Entity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebIconDatabase.IconListener;
@@ -86,6 +90,33 @@ public class IScheduleActivity extends Activity {
 		finish();
 	}
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		super.onCreateOptionsMenu(menu);
+		menu.add(Menu.NONE, R.id.menu_settings, Menu.NONE, "Настройки");
+		//MenuInflater inflater = getMenuInflater();
+		//inflater.inflate(R.menu.main_menu, menu);
+		return true;
+	}
+	
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
+		switch (item.getItemId()) {
+		case R.id.menu_settings:
+			intent = new Intent(this, MenuSettingsActivity.class);
+			startActivity(intent);
+			break;
+		default:
+			break;
+		}
+
+		return true;
+	}
+
+	
 	@SuppressWarnings("unused")
 	private class PostRequestAuthManager extends
 			AsyncTask<Void, Void, HttpResponse> {
@@ -118,7 +149,11 @@ public class IScheduleActivity extends Activity {
 			}
 			HttpResponse responce = null;
 			try {
-				HttpPost request = new HttpPost(StringConstants.MY_URI);
+				String url = mSharedPreferences.getString("host", "");
+				String port = mSharedPreferences.getString("port", "");
+				String uri = url + ":" + port + "/main";
+				HttpPost request = new HttpPost(uri);
+				
 				StringEntity entity = new StringEntity(reqString, "UTF-8");
 				request.setHeader(HTTP.CONTENT_TYPE, "text/xml");
 				request.setEntity(entity);

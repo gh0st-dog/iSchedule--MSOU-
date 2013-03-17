@@ -69,11 +69,8 @@ public class MainTabActivity extends TabActivity {
 		super.onResume();
 		String lastSync = getSharedPreferences(
 				StringConstants.SCHEDULE_SHARED_PREFERENCES, MODE_PRIVATE)
-				.getString(StringConstants.SHARED_LAST_SYNC_DATE, null);
-		if(lastSync==null)
-			lastSyncTV.setText("-");
-		else
-			lastSyncTV.setText(lastSync);
+				.getString(StringConstants.SHARED_LAST_SYNC_DATE, "-");
+		lastSyncTV.setText(lastSync);
 
 	}
 
@@ -88,18 +85,23 @@ public class MainTabActivity extends TabActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
 		switch (item.getItemId()) {
 		case R.id.menu_check:
-			Intent intent1 = new Intent(this, UpdateDialogActivity.class);
-			startActivity(intent1);
+			intent = new Intent(this, UpdateDialogActivity.class);
+			startActivity(intent);
 			break;
 		case R.id.menu_exit:
 			AlertDialog alert = getExitAlertDialog();
 			alert.show();
 			break;
 		case R.id.menu_info:
-			Intent intent2 = new Intent(this, UserInfoDialogActivity.class);
-			startActivity(intent2);
+			intent = new Intent(this, UserInfoDialogActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.menu_settings:
+			intent = new Intent(this, MenuSettingsActivity.class);
+			startActivity(intent);
 			break;
 		default:
 			break;
@@ -119,9 +121,7 @@ public class MainTabActivity extends TabActivity {
 										StringConstants.SCHEDULE_SHARED_PREFERENCES,
 										MODE_PRIVATE);
 								SharedPreferences.Editor editor = pref.edit();
-								for (String key : pref.getAll().keySet()) {
-									editor.remove(key);
-								}
+								editor.remove(StringConstants.TOKEN);
 								editor.commit();
 								SharedPreferences schedule = getSharedPreferences(
 										StringConstants.MY_SCHEDULE,
