@@ -60,31 +60,7 @@ public class ScheduleListActivity extends ListActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		/*TextView tv = (TextView) findViewById(android.R.id.empty);
-		File f = new File(Environment.getDataDirectory().getPath().concat("/schdule_response.xml"));
-		String xmlSchedule = getTestXMLStringFromLocalFile(f);
-		tv.setText(xmlSchedule);
-		try{
-			ArrayList<MySubject> sbjects = new ArrayList<MySubject>();
-			for (String key : myMap.keySet()) {
-				sbjects.add(new MySubject(key, new JSONObject(myMap.get(key))));
-			}
-			MySubjectUpdateManager manager = XMLParser.parseXMLScheduleResponse(xmlSchedule);
-			HashMap<String, String> map = new HashMap<String, String>();
-			ArrayList<MySubject> arr = new ArrayList<MySubject>();
-			for (MySubject sbj : manager.getSubjectsToAdd()) {
-				map.put(sbj.getId(), sbj.toJSONObject().toString());
-				arr.add(new MySubject(sbj.getId(),new JSONObject(map.get(sbj.getId()))));
-			}
-			SharedPreferences.Editor editor = sherPref.edit();
-			for (String key : map.keySet()) {
-				editor.putString(key, map.get(key));
-			}
-			editor.commit();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
+		
 		ScheduleListAdapter adapter = new ScheduleListAdapter(subjList, this);
 		setListAdapter(adapter);
 	}

@@ -12,12 +12,12 @@
     <string name="place">Аудитория:</string>
     <string name="group">Группа:</string>
     <string name="my_info">Профиль</string>
-    <string name="check_updates">Изменения</string>
-    <string name="download">Загрузить</string>
+    <string name="check_updates">Обновить</string>
     <string name="settings">Настройки</string>
     <string name="get_token">Получить токен</string>
     <string name="exit">Выход</string>
     <string name="check">Проверка</string>
+    <string name="download">Загрузить</string>
     <string name="new_changes">Изменения:</string>
     <string name="last_change">Последнее изменение:</string>
     <string name="sure_to_exit">Вы уверены, что хотите выйти из текущего профиля?</string>

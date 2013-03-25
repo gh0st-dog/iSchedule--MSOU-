@@ -31,9 +31,12 @@ import ru.romanov.schedule.utils.SubjectToRemove;
 import ru.romanov.schedule.utils.XMLParser;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -72,21 +75,21 @@ public class UpdateDialogActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.update_check:
-			UpdateChecker checker = new UpdateChecker(getSharedPreferences(
-					StringConstants.SCHEDULE_SHARED_PREFERENCES, MODE_PRIVATE)
-					.getString(StringConstants.TOKEN, null));
-			checker.execute(null);
-			break;
-		case R.id.update_load:
-			AsyncUpdater updater = new AsyncUpdater(getSharedPreferences(
-					StringConstants.SCHEDULE_SHARED_PREFERENCES, MODE_PRIVATE)
-					.getString(StringConstants.TOKEN, null));
-			updater.execute(null);
-			break;
-		case R.id.update_exit:
-			finish();
-			break;
+			case R.id.update_check:
+				UpdateChecker checker = new UpdateChecker(getSharedPreferences(
+						StringConstants.SCHEDULE_SHARED_PREFERENCES, MODE_PRIVATE)
+						.getString(StringConstants.TOKEN, null));
+				checker.execute();
+				break;
+			case R.id.update_load:
+				AsyncUpdater updater = new AsyncUpdater(getSharedPreferences(
+						StringConstants.SCHEDULE_SHARED_PREFERENCES, MODE_PRIVATE)
+						.getString(StringConstants.TOKEN, null));
+				updater.execute();
+				break;
+			case R.id.update_exit:
+				finish();
+				break;
 		}
 
 	}
@@ -279,6 +282,13 @@ public class UpdateDialogActivity extends Activity implements OnClickListener {
 			dialog.dismiss();
 
 		}
+	}
+	
+	private boolean isNetworkAvailable() {
+	    ConnectivityManager connectivityManager 
+	          = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+	    return activeNetworkInfo != null;
 	}
 
 }
