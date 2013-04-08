@@ -17,6 +17,7 @@ import org.apache.http.protocol.HTTP;
 import ru.romanov.schedule.R;
 import ru.romanov.schedule.utils.RequestStringsCreater;
 import ru.romanov.schedule.utils.StringConstants;
+import ru.romanov.schedule.utils.UpdateService;
 import ru.romanov.schedule.utils.XMLParser;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -46,6 +47,8 @@ public class MainTabActivity extends TabActivity {
 		TabHost tabHost = getTabHost(); // The activity TabHost
 		TabHost.TabSpec spec; // Resusable TabSpec for each tab
 		Intent intent; // Reusable Intent for each tab
+		
+		//startService(new Intent(this, UpdateService.class));
 
 		// Create an Intent to launch an Activity for the tab (to be reused)
 		intent = new Intent().setClass(this, ScheduleListActivity.class);
@@ -62,6 +65,7 @@ public class MainTabActivity extends TabActivity {
 		tabHost.addTab(spec);
 
 		tabHost.setCurrentTab(0);
+		
 	}
 
 	@Override

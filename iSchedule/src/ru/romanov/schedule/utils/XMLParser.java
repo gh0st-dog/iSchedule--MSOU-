@@ -244,7 +244,7 @@ public abstract class XMLParser {
 			ParserConfigurationException, SAXException, ParseException {
 		MySubjectUpdateManager manager = null;
 		try {
-			Document dom =domFromString(XMLResponse);
+			Document dom = domFromString(XMLResponse);
 			NodeList domNodes = dom.getChildNodes();
 			Node response = domNodes.item(0);
 			NodeList responseNodes = response.getChildNodes();

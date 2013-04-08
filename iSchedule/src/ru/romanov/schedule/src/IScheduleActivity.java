@@ -22,7 +22,9 @@ import ru.romanov.schedule.adapters.UserAdapter;
 import ru.romanov.schedule.utils.*;
 import ru.romanov.schedule.R;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -56,6 +58,7 @@ public class IScheduleActivity extends Activity {
 		if (mSharedPreferences.getString(StringConstants.TOKEN, null) == null) {
 			setContentView(R.layout.main);
 		} else {
+			setUpdateAlarm();
 			startMainTabActivity();
 		}
 	}
@@ -82,6 +85,15 @@ public class IScheduleActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+	}
+	
+	private void setUpdateAlarm() {
+		AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		int alarmType = AlarmManager.ELAPSED_REALTIME_WAKEUP;
+		Intent intent = new Intent(this, UpdateManager.class);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+		alarm.setRepeating(alarmType, 
+				10000, 5*60*1000, pendingIntent);
 	}
 
 	private void startMainTabActivity() {
@@ -197,6 +209,7 @@ public class IScheduleActivity extends Activity {
 						UserAdapter us = new UserAdapter(context);
 						us.saveUser(resultMap.get(XMLParser.NAME), resultMap.get(XMLParser.LOGIN), 
 								resultMap.get(XMLParser.EMAIL), resultMap.get(XMLParser.PHONE));
+						setUpdateAlarm();
 						startMainTabActivity();
 						
 					} else {
