@@ -3,6 +3,8 @@ package ru.romanov.schedule.utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -15,12 +17,15 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 
+import ru.romanov.schedule.src.IScheduleActivity;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -114,6 +119,14 @@ public class UpdateService extends Service{
 			if (updateManager != null) {
 				UpdateManager.notificateAboutUpdate(context);
 			}
+			SharedPreferences mSharedPreferences = getSharedPreferences(
+					StringConstants.SCHEDULE_SHARED_PREFERENCES, MODE_PRIVATE);
+			Editor editor = mSharedPreferences.edit();
+			Calendar calend = Calendar.getInstance();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+			
+			editor.putString(StringConstants.SHARED_LAST_SYNC_DATE, sdf.format(calend.getTime()));
+			editor.commit();
 			stopSelf();
 		}
 	}

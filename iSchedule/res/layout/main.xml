@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:longClickable="true" 
     android:orientation="vertical"
-	android:background="#000000">
+	android:background="#ffffff">
 
     <TextView
         android:id="@+id/textView1"

@@ -87,7 +87,7 @@ public class ScheduleListAdapter extends BaseAdapter {
 			holder.dateTV = (TextView) convertView
 					.findViewById(R.id.schedule_list_item_date);
 			holder.dowTV = (TextView) convertView
-					.findViewById(R.id.schedule_lsit_item_dow);
+					.findViewById(R.id.schedule_list_item_weekday);
 			holder.scheduleLL = (LinearLayout) convertView
 					.findViewById(R.id.schedule_list_item_layout);
 			holder.childView = inflator.inflate(R.layout.schedule_item_element, null);

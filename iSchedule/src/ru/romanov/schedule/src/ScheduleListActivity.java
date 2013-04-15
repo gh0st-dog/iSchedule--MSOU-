@@ -1,94 +1,73 @@
 package ru.romanov.schedule.src;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import ru.romanov.schedule.R;
-import ru.romanov.schedule.adapters.ScheduleListAdapter;
 import ru.romanov.schedule.utils.MySubject;
-import ru.romanov.schedule.utils.MySubjectUpdateManager;
-import ru.romanov.schedule.utils.RequestStringsCreater;
 import ru.romanov.schedule.utils.StringConstants;
-import ru.romanov.schedule.utils.XMLParser;
 import android.app.ListActivity;
-import android.app.ProgressDialog;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.widget.TextView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 public class ScheduleListActivity extends ListActivity {
 
 	private ArrayList <MySubject> subjList;
+	private HashMap<String, String> ruDays = new HashMap<String, String>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_activity_layout);
+		
+		ruDays.put("Mon", "Пн");
+		ruDays.put("Tue", "Вт");
+		ruDays.put("Wed", "Ср");
+		ruDays.put("Thu", "Чт");
+		ruDays.put("Fri", "Пт");
+		ruDays.put("Sat", "Сб");
+		ruDays.put("Sun", "Вс");
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		try {
-			loadSchedule();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		ListView listOfSchedule = (ListView) findViewById(android.R.id.list);
+		ArrayList<HashMap<String, String>> currentWeek = new ArrayList<HashMap<String, String>>();
+		HashMap<String, String> cur_day = null;
+		Calendar calend = Calendar.getInstance(Locale.FRANCE);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		
+		for (int i = 0; i < 7; ++i) {
+			cur_day = new HashMap<String, String>();
+			calend.set(Calendar.DAY_OF_WEEK, calend.getFirstDayOfWeek() + i);
+			String disp_name = calend.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.ENGLISH);
+			
+			cur_day.put("date", sdf.format(calend.getTime()));
+			cur_day.put("day", ruDays.get(disp_name));
+			currentWeek.add(cur_day);
 		}
 		
-		ScheduleListAdapter adapter = new ScheduleListAdapter(subjList, this);
-		setListAdapter(adapter);
+		SimpleAdapter adapter = new SimpleAdapter(this,
+												currentWeek,
+												R.layout.schedule_list_item, new String[] {
+												"date", "day"}, 
+												new int[] { 
+												R.id.schedule_list_item_date, 
+												R.id.schedule_list_item_weekday});
+		listOfSchedule.setAdapter(adapter);
 	}
 
-	/**
-	 * Временная функция для тестирования. Информация берётся не с сервера, а из указанного фала
-	 * @param f
-	 * @return
-	 */
-	private static String getTestXMLStringFromLocalFile(File f) {
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					new FileInputStream(f)));
-			StringBuilder total = new StringBuilder();
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				total.append(line);
-			} 
-			return total.toString();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;		
-	}
 	
 	private void loadSchedule() throws JSONException, ParseException {
 		SharedPreferences sherPref = getSharedPreferences(StringConstants.MY_SCHEDULE, MODE_PRIVATE);
