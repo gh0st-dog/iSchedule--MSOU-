@@ -28,7 +28,7 @@
     <string name="name">Имя</string>
     <string name="phone">Телефон</string>
     <string name="email">Почта</string>
-    <string name="curr_profile_info">Информация о текущем профиле</string>
+    <string name="curr_profile_info">ПРОФИЛЬ</string>
 
     <string-array name="days_of_week">
         <item>Воскресенье</item>

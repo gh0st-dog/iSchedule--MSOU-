@@ -34,9 +34,6 @@
          <activity
             android:name=".src.UpdateListActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar" />
-        <activity
-            android:name=".src.UpdateDialogActivity" 
-            android:theme="@android:style/Theme.Dialog"/>
          <activity
             android:name=".src.UserInfoDialogActivity" 
             android:theme="@android:style/Theme.Dialog"/>
