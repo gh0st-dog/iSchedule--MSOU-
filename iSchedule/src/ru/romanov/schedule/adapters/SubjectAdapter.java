@@ -1,16 +1,15 @@
 package ru.romanov.schedule.adapters;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import ru.romanov.schedule.utils.Subject;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import ru.romanov.schedule.utils.Subject;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 
 public class SubjectAdapter extends SQLiteOpenHelper {
 	
@@ -83,7 +82,10 @@ public class SubjectAdapter extends SQLiteOpenHelper {
 		}
 	}
 	
-	public Subject getSubjectByDate(String date) {
+	public Subject getSubjectByDate(Calendar date) {
+        ArrayList<Subject> subjects = new ArrayList<Subject>();
+        HashMap<String, String> rawSubj = new HashMap<String, String>();
+
 		return null;
 	}
 	
