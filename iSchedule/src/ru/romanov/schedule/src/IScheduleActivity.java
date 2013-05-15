@@ -1,29 +1,7 @@
 package ru.romanov.schedule.src;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
-
-import ru.romanov.schedule.adapters.UserAdapter;
-import ru.romanov.schedule.utils.*;
-import ru.romanov.schedule.R;
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -32,16 +10,33 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract.RawContacts.Entity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.WebIconDatabase.IconListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
+import ru.romanov.schedule.R;
+import ru.romanov.schedule.adapters.UserAdapter;
+import ru.romanov.schedule.utils.RequestStringsCreater;
+import ru.romanov.schedule.utils.StringConstants;
+import ru.romanov.schedule.utils.UpdateManager;
+import ru.romanov.schedule.utils.XMLParser;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Map;
 
 public class IScheduleActivity extends Activity {
 

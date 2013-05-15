@@ -42,6 +42,9 @@
          <activity
             android:name=".src.MenuSettingsActivity" 
             android:theme="@android:style/Theme.Dialog"/>
+        <activity
+            android:name=".src.ScheduleListActivity"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
         
         <receiver android:name=".utils.UpdateManager" /> 
         <service android:enabled="true" android:name=".utils.UpdateService" />

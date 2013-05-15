@@ -1,12 +1,10 @@
 package ru.romanov.schedule.utils;
 
-import android.annotation.SuppressLint;
-import java.util.Map;
-
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.util.Map;
 
 public abstract class RequestStringsCreater {
 	

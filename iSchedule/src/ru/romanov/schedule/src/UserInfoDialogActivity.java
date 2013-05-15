@@ -1,24 +1,16 @@
 package ru.romanov.schedule.src;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import ru.romanov.schedule.R;
-import ru.romanov.schedule.adapters.UserAdapter;
-import ru.romanov.schedule.utils.StringConstants;
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import ru.romanov.schedule.R;
+import ru.romanov.schedule.adapters.UserAdapter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserInfoDialogActivity extends Activity implements OnClickListener{
 

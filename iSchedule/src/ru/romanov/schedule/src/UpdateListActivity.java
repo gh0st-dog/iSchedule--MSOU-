@@ -1,29 +1,25 @@
 package ru.romanov.schedule.src;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.json.JSONObject;
-
-import ru.romanov.schedule.R;
-import ru.romanov.schedule.adapters.ScheduleCheckListAdapter;
-import ru.romanov.schedule.utils.MySubject;
-import ru.romanov.schedule.utils.RequestStringsCreater;
-import ru.romanov.schedule.utils.StringConstants;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ListActivity;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+import org.json.JSONObject;
+import ru.romanov.schedule.R;
+import ru.romanov.schedule.adapters.ScheduleCheckListAdapter;
+import ru.romanov.schedule.utils.MySubject;
+import ru.romanov.schedule.utils.RequestStringsCreater;
+import ru.romanov.schedule.utils.StringConstants;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class UpdateListActivity extends ListActivity implements OnClickListener {
 

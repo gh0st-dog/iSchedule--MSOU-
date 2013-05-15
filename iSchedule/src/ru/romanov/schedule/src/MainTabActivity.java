@@ -1,39 +1,19 @@
 package ru.romanov.schedule.src;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Map;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
-
-import ru.romanov.schedule.R;
-import ru.romanov.schedule.utils.RequestStringsCreater;
-import ru.romanov.schedule.utils.StringConstants;
-import ru.romanov.schedule.utils.UpdateService;
-import ru.romanov.schedule.utils.XMLParser;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
+import ru.romanov.schedule.R;
+import ru.romanov.schedule.utils.StringConstants;
 
 public class MainTabActivity extends TabActivity {
 

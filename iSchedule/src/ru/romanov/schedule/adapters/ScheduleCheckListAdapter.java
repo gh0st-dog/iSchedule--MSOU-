@@ -1,30 +1,23 @@
 package ru.romanov.schedule.adapters;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import ru.romanov.schedule.R;
-import ru.romanov.schedule.utils.MySubject;
-import ru.romanov.schedule.utils.XMLParser;
-
 import android.content.Context;
-import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+import ru.romanov.schedule.R;
+import ru.romanov.schedule.utils.MySubject;
+import ru.romanov.schedule.utils.XMLParser;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ScheduleCheckListAdapter extends BaseAdapter {
 	private static String AGREE = "agree";

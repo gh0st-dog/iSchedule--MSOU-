@@ -1,8 +1,6 @@
 package ru.romanov.schedule.src;
 
 
-import ru.romanov.schedule.R;
-import ru.romanov.schedule.utils.StringConstants;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -11,6 +9,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import ru.romanov.schedule.R;
+import ru.romanov.schedule.utils.StringConstants;
 
 
 public class MenuSettingsActivity extends Activity implements OnClickListener {
