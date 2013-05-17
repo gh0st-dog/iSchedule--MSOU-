@@ -88,7 +88,7 @@ public class IScheduleActivity extends Activity {
 		Intent intent = new Intent(this, UpdateManager.class);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 		alarm.setRepeating(alarmType, 
-				10000, 5*60*1000, pendingIntent);
+				10000, 1*60*1000, pendingIntent);
 	}
 
 	private void startMainTabActivity() {
@@ -194,6 +194,7 @@ public class IScheduleActivity extends Activity {
 					}
 					Map<String, String> resultMap = XMLParser.parseResponse(total.toString(), "/response/*");
 					if(resultMap.get(XMLParser.STATUS).equals(XMLParser.OK)) {
+                        resultMap = XMLParser.parseResponse(total.toString(), "/response/login-session/*");
 						Toast.makeText(IScheduleActivity.this,
 								getString(R.string.auth_success), Toast.LENGTH_LONG).show();
 						this.token = resultMap.get(XMLParser.TOKEN);

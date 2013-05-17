@@ -15,11 +15,12 @@ public class Subject {
 	private String groups;
 	private String mode;
 	private String id;
+    private String activities;
 	
 	// Constructor using fields
 	public Subject(String place, String checked, String subject, String period,
 			String dt_start, String dt_end, String dow, String t_start,
-			String t_end, String groups, String mode, String id) {
+			String t_end, String groups, String mode, String id, String activities) {
 		super();
 		this.place = place;
 		this.checked = checked;
@@ -33,6 +34,7 @@ public class Subject {
 		this.groups = groups;
 		this.mode = mode;
 		this.id = id;
+        this.activities = activities;
 	}
 	
 	
@@ -43,14 +45,15 @@ public class Subject {
 		this.checked = fields.get("checked");
 		this.subject = fields.get("subject");
 		this.period = fields.get("repeat");
-		this.dt_start = fields.get("start");
-		this.dt_end = fields.get("end");
+		this.dt_start = fields.get("dt_start");
+		this.dt_end = fields.get("dt_end");
 		this.dow = fields.get("dow");
 		this.t_start = fields.get("t_start");
 		this.t_end = fields.get("t_end");
 		this.groups = fields.get("groups");
 		this.mode = fields.get("mode");
 		this.id = fields.get("id");
+        this.activities = fields.get("activities");
 	}
 	
 	// Getters
@@ -91,6 +94,9 @@ public class Subject {
 	public String getMode() {
 		return mode;
 	}
+    public String getActivities() {
+        return activities;
+    }
 	
 	// Setters
 	public void setId(String id) {

@@ -1,6 +1,7 @@
 package ru.romanov.schedule.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,11 @@ import java.util.ArrayList;
 
 public class SubjectsListAdapter extends BaseExpandableListAdapter{
 	
-	private ArrayList<String> groups;
+	private ArrayList<ArrayList<String>> groups;
     private ArrayList<ArrayList<Subject>> children;
     private Context context;
     
-    public SubjectsListAdapter(Context context, ArrayList<String> groups, ArrayList<ArrayList<Subject>> children) {
+    public SubjectsListAdapter(Context context, ArrayList<ArrayList<String>> groups, ArrayList<ArrayList<Subject>> children) {
     	this.context = context;
     	this.children = children;
     	this.groups = groups;
@@ -48,12 +49,17 @@ public class SubjectsListAdapter extends BaseExpandableListAdapter{
 		TextView timeView = (TextView) convertView.findViewById(R.id.schedule_item_time);
 		TextView placeView = (TextView) convertView.findViewById(R.id.schedule_item_place);
 		TextView actView = (TextView) convertView.findViewById(R.id.schedule_item_act);
-		
+
+        String time_start = subj.getT_start();
+        String time_end = subj.getT_end();
+        time_start = new StringBuffer(time_start).insert(2, ".").toString();
+        time_end = new StringBuffer(time_end).insert(2, ".").toString();
+
 		subjView.setText(subj.getSubject());
 		groupView.setText(subj.getGroups());
-		timeView.setText(subj.getT_start());
+		timeView.setText(time_start + ":" + time_end);
 		placeView.setText(subj.getPlace());
-		actView.setText("Pare");
+		actView.setText(subj.getActivities());
 
 		return convertView;
 	}
@@ -64,7 +70,7 @@ public class SubjectsListAdapter extends BaseExpandableListAdapter{
 	}
 
 	@Override
-	public String getGroup(int groupPosition) {
+	public ArrayList<String> getGroup(int groupPosition) {
 		return groups.get(groupPosition);
 	}
 
@@ -80,7 +86,7 @@ public class SubjectsListAdapter extends BaseExpandableListAdapter{
 
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-		String group = getGroup(groupPosition);
+		ArrayList<String> group = getGroup(groupPosition);
 		
 		if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -88,8 +94,20 @@ public class SubjectsListAdapter extends BaseExpandableListAdapter{
         }
 		
 		TextView dateView = (TextView) convertView.findViewById(R.id.schedule_list_item_date);
+        TextView dowView = (TextView) convertView.findViewById(R.id.schedule_list_item_weekday);
 		
-		dateView.setText(group);
+		dateView.setText(group.get(0));
+        dowView.setText(group.get(1));
+
+        if (isExpanded) {
+            dateView.setTextColor(Color.parseColor("#DF004F"));
+            dowView.setTextColor(Color.parseColor("#DF004F"));
+        }
+        else {
+            dateView.setTextColor(Color.BLACK);
+            dowView.setTextColor(Color.BLACK);
+        }
+
 		
 		return convertView;
 	}

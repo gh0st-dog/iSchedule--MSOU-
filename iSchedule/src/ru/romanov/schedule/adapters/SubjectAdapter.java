@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import ru.romanov.schedule.utils.Subject;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 
 public class SubjectAdapter extends SQLiteOpenHelper {
@@ -17,7 +16,7 @@ public class SubjectAdapter extends SQLiteOpenHelper {
 	private static final int DB_VERSION = 1;
 	
 	public static final String[] columns = {"id", "subject", "checked", "period", "dt_start", "dt_end",
-		"dow", "t_start", "t_end", "groups", "place"};
+		"dow", "t_start", "t_end", "groups", "place", "activities"};
 	
 	public static final String TABLE_NAME = "T_SUBJECT";
 	public static final String PLACE = "place";
@@ -30,10 +29,11 @@ public class SubjectAdapter extends SQLiteOpenHelper {
 	public static final String T_START = "t_start";
 	public static final String T_END = "t_end";
 	public static final String GROUPS = "groups";
+    public static final String ACTIVITIES = "activities";
 	private static final String CREATE_TABLE = "create table " + TABLE_NAME + " ( id integer primary key, "
 		      + SUBJECT + " TEXT, " + PERIOD + " TEXT, " + DT_START + " TEXT, " + DT_END + " TEXT, " 
 			+ DOW + " TEXT, " + T_START + " TEXT, " + T_END + " TEXT, " + CHECKED + " TEXT, " 
-		      + PLACE + " TEXT, " + GROUPS + " TEXT)";
+		      + PLACE + " TEXT, " + GROUPS + " TEXT, " + ACTIVITIES + " TEXT)";
 
 	public SubjectAdapter(Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
@@ -64,6 +64,7 @@ public class SubjectAdapter extends SQLiteOpenHelper {
 		cv.put("dow", subj.getDow());
 		cv.put("checked", subj.getChecked());
 		cv.put("id", subj.getId());
+        cv.put("activities", subj.getActivities());
 		db.insert(SubjectAdapter.TABLE_NAME, null, cv);
 	}
 	
@@ -81,12 +82,59 @@ public class SubjectAdapter extends SQLiteOpenHelper {
 			}
 		}
 	}
-	
-	public Subject getSubjectByDate(Calendar date) {
+
+    public ArrayList<Subject> getNewSubjects() {
         ArrayList<Subject> subjects = new ArrayList<Subject>();
         HashMap<String, String> rawSubj = new HashMap<String, String>();
 
-		return null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME, columns, "checked = ?", new String[] {"false"}, null, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()){
+                String[] names = cursor.getColumnNames();
+                do{
+                    for (int i = 0; i < names.length; ++i) {
+                        rawSubj.put(names[i], cursor.getString(i));
+                    }
+                    Subject subj = new Subject(rawSubj);
+                    subjects.add(subj);
+                }  while(cursor.moveToNext());
+            }
+        }
+        db.close();
+        return subjects;
+    }
+	
+	public ArrayList<Subject> getSubjectsByDate(String day) {
+        ArrayList<Subject> subjects = new ArrayList<Subject>();
+        HashMap<String, String> rawSubj = new HashMap<String, String>();
+        HashMap<String, String> ruDays = new HashMap<String, String>();
+        ruDays.put("Mon", "Понедельник");
+        ruDays.put("Tue", "Вторник");
+        ruDays.put("Wed", "Среда");
+        ruDays.put("Thu", "Четверг");
+        ruDays.put("Fri", "Пятница");
+        ruDays.put("Sat", "Суббота");
+        ruDays.put("Sun", "Воскресенье");
+
+        String dow = ruDays.get(day);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME, columns, "dow = ?", new String[] {dow}, null, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()){
+                String[] names = cursor.getColumnNames();
+                do{
+                    for (int i = 0; i < names.length; ++i) {
+                        rawSubj.put(names[i], cursor.getString(i));
+                    }
+                    Subject subj = new Subject(rawSubj);
+                    subjects.add(subj);
+                }  while(cursor.moveToNext());
+            }
+        }
+        db.close();
+        return subjects;
 	}
 	
 	public Subject getSubjectById(String id) {

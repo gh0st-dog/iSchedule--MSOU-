@@ -19,7 +19,7 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/check_subject_tv"
+            android:id="@+id/check_subject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="-"
@@ -48,7 +48,7 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/check_start_date_tv"
+                android:id="@+id/check_start_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-"
@@ -71,7 +71,7 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/check_end_date_tv"
+                android:id="@+id/check_end_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-"
@@ -118,11 +118,11 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/check_dow_tv"
+                android:id="@+id/check_dow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-"
-                android:textColor="#000000"
+                android:textColor="#DF004F"
                 android:textSize="20sp" />
         </LinearLayout>
         
@@ -175,11 +175,11 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/check_time_tv"
+            android:id="@+id/check_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="-"
-            android:textColor="#000000"
+            android:textColor="#DF004F"
             android:textSize="20sp" />
     </LinearLayout>
 
@@ -198,7 +198,7 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/check_group_tv"
+            android:id="@+id/check_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="-"
@@ -221,11 +221,11 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/check_place_tv"
+            android:id="@+id/check_place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="-"
-            android:textColor="#000000"
+            android:textColor="#DF004F"
             android:textSize="20sp" />
     </LinearLayout>
 

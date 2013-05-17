@@ -29,7 +29,7 @@ public class ScheduleListFragment extends Fragment{
 
     int pageNumber;
     private ArrayList<ArrayList<Subject>> subjList;
-    private ArrayList<String> group;
+    private ArrayList<ArrayList<String>> group;
     private HashMap<String, String> ruDays = new HashMap<String, String>();
 
     static public ScheduleListFragment newInstance(int page) {
@@ -65,11 +65,12 @@ public class ScheduleListFragment extends Fragment{
         SubjectsListAdapter subjectListAdapter = new SubjectsListAdapter(this.getActivity(), group, subjList);
         scheduleList.setAdapter(subjectListAdapter);
 
+
         return view;
     }
 
     private void loadData() {
-        group = new ArrayList<String>();
+        group = new ArrayList<ArrayList<String>>();
         subjList = new ArrayList<ArrayList<Subject>>();
 
         SubjectAdapter sa = new SubjectAdapter(this.getActivity());
@@ -79,11 +80,14 @@ public class ScheduleListFragment extends Fragment{
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         calend.add(Calendar.DAY_OF_YEAR, pageNumber*7);
         for (int i = 0; i < 7; ++i) {
+            ArrayList<String> tmp = new ArrayList<String>();
             calend.set(Calendar.DAY_OF_WEEK, calend.getFirstDayOfWeek() + i);
             String disp_name = calend.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.ENGLISH);
-            group.add(sdf.format(calend.getTime()));
+            tmp.add(sdf.format(calend.getTime()));
+            tmp.add(ruDays.get(disp_name));
+            group.add(tmp);
 
-            subjList.add(sa.getAll());
+            subjList.add(sa.getSubjectsByDate(disp_name));
         }
     }
 }

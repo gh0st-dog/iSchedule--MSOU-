@@ -1,32 +1,21 @@
 package ru.romanov.schedule.src;
 
-import android.app.AlertDialog;
-import android.app.ListActivity;
-import android.content.SharedPreferences;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
-import org.json.JSONObject;
+import android.widget.ListView;
 import ru.romanov.schedule.R;
-import ru.romanov.schedule.adapters.ScheduleCheckListAdapter;
-import ru.romanov.schedule.utils.MySubject;
-import ru.romanov.schedule.utils.RequestStringsCreater;
-import ru.romanov.schedule.utils.StringConstants;
+import ru.romanov.schedule.adapters.ScheduleUpdateListAdapter;
+import ru.romanov.schedule.adapters.SubjectAdapter;
+import ru.romanov.schedule.utils.Subject;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-public class UpdateListActivity extends ListActivity implements OnClickListener {
+public class UpdateListActivity extends Activity implements OnClickListener {
 
-	private List<MySubject> newSubjects;
-	private ScheduleCheckListAdapter adapter;
-	private String token;
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.check_list_activity_layout);
@@ -35,33 +24,14 @@ public class UpdateListActivity extends ListActivity implements OnClickListener 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		SharedPreferences sp = getSharedPreferences(StringConstants.SCHEDULE_SHARED_PREFERENCES, MODE_PRIVATE);
-		this.token = sp.getString(StringConstants.TOKEN, null);
-		if(this.token==null) {
-			//parampampam ERROR
-			Toast.makeText(this, "Что-то странное происходит! Где токен-то? Сейчас каааак всё сломается..", Toast.LENGTH_LONG).show();
-		}
-		sp = getSharedPreferences(
-				StringConstants.MY_SCHEDULE, MODE_PRIVATE);
-		Map<String, String> map = (Map<String, String>) sp.getAll();
-		ArrayList<MySubject> scedule = new ArrayList<MySubject>(map.size());
-		try {
-			for (String key : map.keySet()) {
-				MySubject sbj = new MySubject(key, new JSONObject(map.get(key)));
-				scedule.add(sbj);
-			}
-			ArrayList<MySubject> sbjToCheck = new ArrayList<MySubject>();
-			for (MySubject sbj : scedule) {
-				if (!sbj.isChecked()) {
-					sbjToCheck.add(sbj);
-				}
-			}
-			this.newSubjects = sbjToCheck;
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		this.adapter =new ScheduleCheckListAdapter(this.newSubjects, this);
-		setListAdapter(this.adapter);
+
+        SubjectAdapter adapter = new SubjectAdapter(this);
+        ArrayList<Subject> subjects =  adapter.getNewSubjects();
+
+        ScheduleUpdateListAdapter updater = new ScheduleUpdateListAdapter(this, subjects);
+        ListView l = (ListView) findViewById(R.id.checkList);
+        l.setAdapter(updater);
+
 		
 		Button confirmButton = (Button) findViewById(R.id.check_confirm_button);
 		confirmButton.setOnClickListener(this);
@@ -72,16 +42,7 @@ public class UpdateListActivity extends ListActivity implements OnClickListener 
 	public void onClick(View v) {
 		switch (v.getId()){
 		case R.id.check_confirm_button:
-			StringBuilder sb = new StringBuilder();
-			HashMap<String, String> idMap= this.adapter.getCheckedElemetsStatus();
-			String reqBody = null;
-			try {
-				reqBody = RequestStringsCreater.createConfirmCheckString(token, idMap);
-			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			new AlertDialog.Builder(this).setMessage(reqBody).show();
+
 			break;
 		}
 	}

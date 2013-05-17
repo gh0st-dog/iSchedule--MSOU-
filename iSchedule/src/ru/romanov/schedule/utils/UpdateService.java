@@ -155,6 +155,8 @@ public class UpdateService extends Service{
 					XMLParser.parseSubTree(childes, subject, false);
 					Node period = XMLParser.findFirstByName(childes, "time").getFirstChild();
 					XMLParser.parseSubTree(period.getChildNodes(), subject, false);
+                    subject.put("dt_start", subject.get("start"));
+                    subject.put("dt_end", subject.get("end"));
 					
 					HashMap<String, String> hoursMap = new HashMap<String, String>();
 					Node hours = XMLParser.findFirstByName(period.getChildNodes(), "hours");
