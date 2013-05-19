@@ -6,18 +6,27 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TabHost;
 import android.widget.TextView;
 import ru.romanov.schedule.R;
+import ru.romanov.schedule.adapters.SubjectAdapter;
+import ru.romanov.schedule.utils.CalendarManager;
 import ru.romanov.schedule.utils.StringConstants;
+import ru.romanov.schedule.utils.Subject;
+
+import java.util.ArrayList;
 
 public class MainTabActivity extends TabActivity {
 
 	TextView lastSyncTV;
+    private static final Uri EVENT_URI = CalendarContract.Events.CONTENT_URI;
+    private static final String ACCOUNT_NAME = "buyvich@gmail.com";
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,8 +81,8 @@ public class MainTabActivity extends TabActivity {
 		Intent intent;
 		switch (item.getItemId()) {
 		case R.id.menu_check:
-			//intent = new Intent(this, UpdateDialogActivity.class);
-			//startActivity(intent);
+
+            testCalendar();
 			break;
 		case R.id.menu_exit:
 			AlertDialog alert = getExitAlertDialog();
@@ -93,6 +102,34 @@ public class MainTabActivity extends TabActivity {
 
 		return true;
 	}
+
+    private void testCalendar() {
+        SubjectAdapter subjectAdapter = new SubjectAdapter(this);
+        CalendarManager calendarManager = new CalendarManager(this);
+        ArrayList<Subject> subjects = subjectAdapter.getAll();
+        for (Subject subject : subjects) {
+            calendarManager.addEvent(subject.getSubject()
+            , subject.getPlace()
+            , subject.getDt_start()
+            , subject.getDt_end()
+            , subject.getT_start()
+            , subject.getT_end()
+            , subject.getPeriod());
+        }
+
+
+    }
+
+    /**Builds the Uri for events (as a Sync Adapter)*/
+    public static Uri buildEventUri() {
+        return EVENT_URI
+                .buildUpon()
+                .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, ACCOUNT_NAME)
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE,
+                        CalendarContract.ACCOUNT_TYPE_LOCAL)
+                .build();
+    }
 
 	private AlertDialog getExitAlertDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
